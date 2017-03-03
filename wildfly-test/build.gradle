@@ -1,0 +1,38 @@
+buildscript {
+   ext {
+      arquillianVersion = '1.1.0.Final'
+      wildflyArquillianVersion = '2.0.2.Final'
+      wildflyEmbeddedContainerVersion = '2.2.0.Final'
+      shrinkwrapResolverVersion = '2.2.0'
+   }
+   
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'http://repository.jboss.org/nexus/content/groups/public' }
+    maven { url 'http://repository.jboss.org/nexus/content/repositories/deprecated' }
+    maven { url 'http://repo.jfrog.org/artifactory/repo' }
+}
+
+apply plugin: 'war'
+
+dependencies {
+  compile project(':spring-cdi-bridge')
+
+   testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+   testCompile group: 'junit', name: 'junit', version: junitVersion
+
+   testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container', version: arquillianVersion
+   testCompile group: 'org.jboss.arquillian.protocol', name: 'arquillian-protocol-servlet', version: arquillianVersion
+   testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-embedded', version: wildflyArquillianVersion
+   testCompile group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-gradle-depchain', version: shrinkwrapResolverVersion
+   testCompile group: 'org.wildfly.core', name: 'wildfly-embedded', version: wildflyEmbeddedContainerVersion
+}
+
+test {
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat = 'full'
+    }
+}

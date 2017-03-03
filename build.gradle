@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+       mavenCentral()
+       jcenter()
+   }
+
+   ext {
+      springVersion = '4.3.6.RELEASE'
+      javaxJeeVersion = '7.0'
+      cdiVersion = '1.2'
+      weldVersion = '2.4.2.SP1'
+
+      slf4jVersion = '1.7.21'
+
+      commonsLang3Version = '3.5'
+
+      lombokVersion = '1.16.10'
+
+      junitVersion = '4.12'
+      assertjVersion = '3.5.2'
+      okHttpClientVersion = '3.6.0'
+
+   }
+   
+}
+group = 'de.bieniek-consulting'
+
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'java'
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
+  
+  group = 'de.bieniek-consulting'
+  version = '1.0'
+
+  buildDir = 'target'
+  
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  configurations.all {
+    resolutionStrategy {
+      eachDependency { details -> 
+        if(details.requested.group == 'org.slf4j') {
+           details.useVersion slf4jVersion
+        }
+      }
+      exclude group: 'commons-logging', module: 'commons-logging'
+    }
+  }
+}

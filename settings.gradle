@@ -1,0 +1,3 @@
+include 'spring-cdi-bridge'
+include 'wildfly-test'
+

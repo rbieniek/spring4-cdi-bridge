@@ -1,0 +1,18 @@
+dependencies {
+   compile group: 'org.springframework', name: 'spring-beans', version: springVersion
+   compile group: 'org.springframework', name: 'spring-core', version: springVersion
+   compile group: 'org.springframework', name: 'spring-context', version: springVersion
+   compile group: 'org.springframework', name: 'spring-context-support', version: springVersion
+
+   compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
+
+   compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+
+   compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
+
+   testCompile group: 'org.springframework', name: 'spring-test', version: springVersion
+   testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+   testCompile group: 'junit', name: 'junit', version: junitVersion
+   testCompile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion
+   testCompile group: 'org.jboss.weld.se', name: 'weld-se', version: weldVersion
+}
