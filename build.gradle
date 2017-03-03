@@ -1,7 +1,6 @@
 buildscript {
     repositories {
        mavenCentral()
-       jcenter()
    }
 
    ext {
@@ -24,7 +23,6 @@ buildscript {
    
 }
 group = 'de.bieniek-consulting'
-
 
 subprojects {
   apply plugin: 'java'

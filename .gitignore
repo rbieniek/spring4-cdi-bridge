@@ -14,5 +14,6 @@ bin/
 target/
 
 *.tmp
-
 *~
+
+wildfly-10.1.0.Final/
