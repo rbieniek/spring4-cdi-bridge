@@ -10,15 +10,26 @@
 
   <artifactId>wildfly-test</artifactId>
     
-  <depdendencies>
+  <dependencies>
     <dependency>
       <groupId>de.bieniek-consulting</groupId>
       <artifactId>spring-cdi-bridge</artifactId>
       <version>1.0</version>
     </dependency>
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <scope>test</scope>
+    </dependency>      
+    <dependency>
       <groupId>org.jboss.arquillian</groupId>
       <artifactId>arquillian-bom</artifactId>
+      <version>${arquillianVersion}</version>
       <scope>import</scope>
       <type>pom</type>
     </dependency>
@@ -38,5 +49,5 @@
       <artifactId>arquillian-container-chameleon</artifactId>
       <scope>test</scope>
     </dependency>
-  </depdendencies>
+  </dependencies>
 </project>

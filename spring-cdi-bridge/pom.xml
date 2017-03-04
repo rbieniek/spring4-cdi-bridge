@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
-      <artifactId>org.assertj-core</artifactId>
+      <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
