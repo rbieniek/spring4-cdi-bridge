@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -14,21 +13,23 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 public class SpringBean implements Bean<Object> {
 
-	private String beanName;
-	private Class<?> beanClass;
-	private Set<Type> beanTypes;
-	private Set<Annotation> qualifiers;
-	private Set<Class<? extends Annotation>> stereotypes;
-	private ConfigurableBeanFactory beanFactory;
+	private final String beanName;
+	private final Class<?> beanClass;
+	private final Set<Type> beanTypes;
+	private final Set<Annotation> qualifiers;
+	private final Set<Class<? extends Annotation>> stereotypes;
+	private final ConfigurableBeanFactory beanFactory;
+	private final Class<? extends Annotation> scope;
 
 	public SpringBean(final String beanName, final Class<?> beanClass, final Set<Type> beanTypes,
 			final Set<Annotation> qualifiers, final Set<Class<? extends Annotation>> stereotypes,
-			final ConfigurableBeanFactory beanFactory) {
+			final Class<? extends Annotation> scope, final ConfigurableBeanFactory beanFactory) {
 		this.beanName = beanName;
 		this.beanClass = beanClass;
 		this.beanTypes = Collections.unmodifiableSet(beanTypes);
 		this.qualifiers = Collections.unmodifiableSet(qualifiers);
 		this.stereotypes = Collections.unmodifiableSet(stereotypes);
+		this.scope = scope;
 		this.beanFactory = beanFactory;
 	}
 
@@ -59,7 +60,7 @@ public class SpringBean implements Bean<Object> {
 
 	@Override
 	public Class<? extends Annotation> getScope() {
-		return Dependent.class;
+		return scope;
 	}
 
 	@Override

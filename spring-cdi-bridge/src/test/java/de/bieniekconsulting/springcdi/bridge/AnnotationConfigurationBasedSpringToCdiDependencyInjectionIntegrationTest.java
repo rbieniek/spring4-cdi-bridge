@@ -2,6 +2,7 @@ package de.bieniekconsulting.springcdi.bridge;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.junit.Before;
@@ -60,6 +61,7 @@ public class AnnotationConfigurationBasedSpringToCdiDependencyInjectionIntegrati
 
 	public static class CdiBean {
 		@Inject
+		@ApplicationScoped
 		private SpringExposedBean springBean;
 
 		public boolean hasSpringBean() {

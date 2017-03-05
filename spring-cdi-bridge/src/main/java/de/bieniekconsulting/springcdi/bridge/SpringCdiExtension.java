@@ -9,6 +9,8 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
@@ -86,6 +88,14 @@ public class SpringCdiExtension implements Extension {
 		qualifiers.add(new AnnotationLiteral<Default>() {
 		});
 
+		final Class<? extends Annotation> scope;
+
+		if (beanDefinition.isSingleton()) {
+			scope = ApplicationScoped.class;
+		} else {
+			scope = Dependent.class;
+		}
+
 		final Set<Class<? extends Annotation>> stereotypes = new HashSet<>();
 
 		for (final Annotation annotation : annotatedType.getAnnotations()) {
@@ -96,7 +106,8 @@ public class SpringCdiExtension implements Extension {
 				stereotypes.add(annotation.annotationType());
 			}
 		}
-		return Optional.of(new SpringBean(beanName, beanClass.get(), beanTypes, qualifiers, stereotypes, beanFactory));
+		return Optional
+				.of(new SpringBean(beanName, beanClass.get(), beanTypes, qualifiers, stereotypes, scope, beanFactory));
 	}
 
 	private boolean isSpringScoped(final BeanDefinition beanDefinition) {
