@@ -1,10 +1,7 @@
-package de.bieniekconsulting.springcdi.bridge;
+package de.bieniekconsulting.springcdi.bridge.support;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 public interface ApplicationContextProvider {
 	ConfigurableApplicationContext provideContext();
-
-	void cdiEnhancedContext(ApplicationContext context);
 }

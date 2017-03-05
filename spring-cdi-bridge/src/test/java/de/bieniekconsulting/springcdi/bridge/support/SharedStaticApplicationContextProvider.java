@@ -1,6 +1,5 @@
-package de.bieniekconsulting.springcdi.bridge;
+package de.bieniekconsulting.springcdi.bridge.support;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 public class SharedStaticApplicationContextProvider implements ApplicationContextProvider {
@@ -14,12 +13,6 @@ public class SharedStaticApplicationContextProvider implements ApplicationContex
 	@Override
 	public ConfigurableApplicationContext provideContext() {
 		return applicationContext;
-	}
-
-	@Override
-	public void cdiEnhancedContext(final ApplicationContext context) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

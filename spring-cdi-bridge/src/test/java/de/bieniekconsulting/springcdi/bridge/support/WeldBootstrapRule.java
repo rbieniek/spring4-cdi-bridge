@@ -1,4 +1,4 @@
-package de.bieniekconsulting.springcdi.bridge;
+package de.bieniekconsulting.springcdi.bridge.support;
 
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;

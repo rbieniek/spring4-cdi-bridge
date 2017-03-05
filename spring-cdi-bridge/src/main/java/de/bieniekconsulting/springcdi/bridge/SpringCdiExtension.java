@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -19,11 +20,14 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessBean;
 import javax.enterprise.util.AnnotationLiteral;
 
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.type.StandardMethodMetadata;
+
+import de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider;
 
 public class SpringCdiExtension implements Extension {
 	private List<Bean<Object>> cdiBeans = new LinkedList<>();
@@ -34,34 +38,38 @@ public class SpringCdiExtension implements Extension {
 
 	public void connectCdiAndSpring(@Observes final AfterBeanDiscovery event, final BeanManager manager)
 			throws ClassNotFoundException {
-		final List<Pair<ApplicationContextProvider, ConfigurableApplicationContext>> contexts = applicationContextFromServiceLoaders();
+		final List<ConfigurableApplicationContext> contexts = applicationContextFromServiceLoaders();
 
-		for (final Pair<ApplicationContextProvider, ConfigurableApplicationContext> contextPair : contexts) {
-			final ConfigurableApplicationContext context = contextPair.getRight();
-			final GenericApplicationContext cdiEnhancedScope = new GenericApplicationContext(context);
+		for (final ConfigurableApplicationContext context : contexts) {
 
-			cdiEnhancedScope
-					.addBeanFactoryPostProcessor(new DependencyRegisteringBeanFactoryPostProcessor(manager, cdiBeans));
+			if (!context.isActive()) {
+				context.addBeanFactoryPostProcessor(
+						new DependencyRegisteringBeanFactoryPostProcessor(manager, cdiBeans));
 
-			cdiEnhancedScope.refresh();
-
-			contextPair.getLeft().cdiEnhancedContext(cdiEnhancedScope);
+				context.refresh();
+			}
 
 			for (final String beanName : context.getBeanDefinitionNames()) {
 				final BeanDefinition beanDefinition = context.getBeanFactory().getBeanDefinition(beanName);
 
 				if (!CdiScope.class.getName().equals(beanDefinition.getScope())) {
-					event.addBean(createBean(beanName, beanDefinition, context.getBeanFactory(), manager));
+					createBean(beanName, beanDefinition, context.getBeanFactory(), manager)
+							.ifPresent(bean -> event.addBean(bean));
 				}
 			}
 
 		}
 	}
 
-	private Bean<?> createBean(final String beanName, final BeanDefinition beanDefinition,
+	private Optional<Bean<?>> createBean(final String beanName, final BeanDefinition beanDefinition,
 			final ConfigurableBeanFactory beanFactory, final BeanManager beanManager) throws ClassNotFoundException {
-		final Class<?> beanClass = Class.forName(beanDefinition.getBeanClassName());
-		final AnnotatedType<?> annotatedType = beanManager.createAnnotatedType(beanClass);
+		final Optional<Class<?>> beanClass = determineBeanClass(beanDefinition);
+
+		if (!beanClass.isPresent()) {
+			return Optional.empty();
+		}
+
+		final AnnotatedType<?> annotatedType = beanManager.createAnnotatedType(beanClass.get());
 		final Set<Type> beanTypes = annotatedType.getTypeClosure();
 		final Set<Annotation> qualifiers = new HashSet<>();
 
@@ -80,7 +88,38 @@ public class SpringCdiExtension implements Extension {
 				stereotypes.add(annotation.annotationType());
 			}
 		}
-		return new SpringBean(beanName, beanClass, beanTypes, qualifiers, stereotypes, beanFactory);
+		return Optional.of(new SpringBean(beanName, beanClass.get(), beanTypes, qualifiers, stereotypes, beanFactory));
+	}
+
+	private Optional<Class<?>> determineBeanClass(final BeanDefinition beanDefinition) {
+		if (beanDefinition instanceof RootBeanDefinition) {
+			final Class<?> targetType = ((RootBeanDefinition) beanDefinition).getTargetType();
+
+			if (targetType != null) {
+				return Optional.of(targetType);
+			}
+		}
+
+		if (beanDefinition.getSource() instanceof StandardMethodMetadata) {
+			final StandardMethodMetadata source = (StandardMethodMetadata) beanDefinition.getSource();
+
+			try {
+				return Optional.of(Class.forName(source.getReturnTypeName()));
+			} catch (final Exception e) {
+				return Optional.empty();
+			}
+
+		}
+
+		if (StringUtils.isNotBlank(beanDefinition.getBeanClassName())) {
+			try {
+				return Optional.of(Class.forName(beanDefinition.getBeanClassName()));
+			} catch (final Exception e) {
+				return Optional.empty();
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	/**
@@ -90,14 +129,13 @@ public class SpringCdiExtension implements Extension {
 	 *
 	 * @return
 	 */
-	private List<Pair<ApplicationContextProvider, ConfigurableApplicationContext>> applicationContextFromServiceLoaders() {
-		final List<Pair<ApplicationContextProvider, ConfigurableApplicationContext>> contexts = new LinkedList<>();
+	private List<ConfigurableApplicationContext> applicationContextFromServiceLoaders() {
+		final List<ConfigurableApplicationContext> contexts = new LinkedList<>();
 
 		final ServiceLoader<ApplicationContextProvider> serviceLoader = ServiceLoader
 				.load(ApplicationContextProvider.class);
 
-		serviceLoader.iterator()
-				.forEachRemaining(provider -> contexts.add(Pair.of(provider, provider.provideContext())));
+		serviceLoader.iterator().forEachRemaining(provider -> contexts.add(provider.provideContext()));
 
 		return contexts;
 	}

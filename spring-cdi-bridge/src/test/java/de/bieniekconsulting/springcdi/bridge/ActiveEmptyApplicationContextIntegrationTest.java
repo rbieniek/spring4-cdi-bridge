@@ -9,7 +9,10 @@ import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
-public class EmptyApplicationContextIntegrationTest {
+import de.bieniekconsulting.springcdi.bridge.support.SharedStaticApplicationContextProvider;
+import de.bieniekconsulting.springcdi.bridge.support.WeldBootstrapRule;
+
+public class ActiveEmptyApplicationContextIntegrationTest {
 
 	@BeforeClass
 	public static void beforeClass() {
