@@ -26,7 +26,11 @@ public class WeldBootstrapRule implements TestRule {
 
 			@Override
 			public void evaluate() throws Throwable {
-				final Weld weld = new Weld().beanClasses(beanClasses);
+				final Weld weld = new Weld();
+
+				if (beanClasses != null) {
+					weld.beanClasses(beanClasses);
+				}
 
 				weldContainer = weld.initialize();
 

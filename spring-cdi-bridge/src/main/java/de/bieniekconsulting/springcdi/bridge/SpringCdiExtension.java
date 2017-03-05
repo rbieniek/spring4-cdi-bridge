@@ -21,6 +21,7 @@ import javax.enterprise.inject.spi.ProcessBean;
 import javax.enterprise.util.AnnotationLiteral;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -101,9 +102,11 @@ public class SpringCdiExtension implements Extension {
 	private boolean isSpringScoped(final BeanDefinition beanDefinition) {
 		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
 			return ((AnnotatedTypeMetadata) beanDefinition.getSource()).isAnnotated(SpringScoped.class.getName());
-		} else {
-			return false;
 		}
+		if (beanDefinition instanceof AnnotatedBeanDefinition) {
+			return ((AnnotatedBeanDefinition) beanDefinition).getMetadata().isAnnotated(SpringScoped.class.getName());
+		}
+		return false;
 	}
 
 	private Optional<Class<?>> determineBeanClass(final BeanDefinition beanDefinition) {

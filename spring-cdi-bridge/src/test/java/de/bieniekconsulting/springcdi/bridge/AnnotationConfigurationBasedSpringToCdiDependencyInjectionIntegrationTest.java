@@ -16,7 +16,7 @@ import de.bieniekconsulting.springcdi.bridge.spring.SpringScoped;
 import de.bieniekconsulting.springcdi.bridge.support.SharedStaticApplicationContextProvider;
 import de.bieniekconsulting.springcdi.bridge.support.WeldBootstrapRule;
 
-public class SpringToCdiDependencyInjectionIntegrationTest {
+public class AnnotationConfigurationBasedSpringToCdiDependencyInjectionIntegrationTest {
 
 	private static AnnotationConfigApplicationContext applicationContext;
 
