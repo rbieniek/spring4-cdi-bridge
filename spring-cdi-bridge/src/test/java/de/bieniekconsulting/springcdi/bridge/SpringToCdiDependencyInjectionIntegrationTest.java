@@ -12,6 +12,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import de.bieniekconsulting.springcdi.bridge.spring.SpringScoped;
 import de.bieniekconsulting.springcdi.bridge.support.SharedStaticApplicationContextProvider;
 import de.bieniekconsulting.springcdi.bridge.support.WeldBootstrapRule;
 
@@ -46,24 +47,45 @@ public class SpringToCdiDependencyInjectionIntegrationTest {
 		assertThat(cdiBean.hasSpringBean()).isTrue();
 	}
 
+	@Test
+	public void shouldFindExposedSpringBean() {
+		assertThat(bootstrapRule.getWeldContainer().select(SpringExposedBean.class).get()).isNotNull();
+	}
+
+	@Test
+	public void shouldNotFindHiddenSpringBean() {
+		assertThat(bootstrapRule.getWeldContainer().select(SpringHiddenBean.class).isUnsatisfied()).isTrue();
+
+	}
+
 	public static class CdiBean {
 		@Inject
-		private SpringBean springBean;
+		private SpringExposedBean springBean;
 
 		public boolean hasSpringBean() {
 			return springBean != null;
 		}
 	}
 
-	public static class SpringBean {
+	public static class SpringExposedBean {
+	}
+
+	public static class SpringHiddenBean {
+
 	}
 
 	@Configuration
 	public static class TestConfig {
 
 		@Bean
-		public SpringBean springBean() {
-			return new SpringBean();
+		@SpringScoped
+		public SpringExposedBean springExposedBean() {
+			return new SpringExposedBean();
+		}
+
+		@Bean
+		public SpringHiddenBean springHiddedBean() {
+			return new SpringHiddenBean();
 		}
 	}
 }

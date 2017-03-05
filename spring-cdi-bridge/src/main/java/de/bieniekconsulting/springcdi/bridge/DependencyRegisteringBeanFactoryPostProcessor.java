@@ -15,6 +15,8 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
+import de.bieniekconsulting.springcdi.bridge.spring.Cdi;
+
 public class DependencyRegisteringBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
 	private final BeanManager beanManager;
@@ -40,14 +42,14 @@ public class DependencyRegisteringBeanFactoryPostProcessor implements BeanFactor
 
 		final CdiScope cdiScope = new CdiScope(beanManager, beans);
 
-		beanFactory.registerScope(CdiScope.class.getName(), cdiScope);
+		beanFactory.registerScope(Cdi.SCOPE_CDI, cdiScope);
 	}
 
 	private BeanDefinition createBeanDefinition(final Bean<Object> bean) {
 		final GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
 
 		beanDefinition.setBeanClass(bean.getBeanClass());
-		beanDefinition.setScope(CdiScope.class.getName());
+		beanDefinition.setScope(Cdi.SCOPE_CDI);
 		beanDefinition.setLazyInit(true);
 
 		return beanDefinition;

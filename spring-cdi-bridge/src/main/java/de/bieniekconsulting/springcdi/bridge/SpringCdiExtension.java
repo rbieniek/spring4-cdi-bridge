@@ -25,8 +25,10 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.type.StandardMethodMetadata;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.core.type.MethodMetadata;
 
+import de.bieniekconsulting.springcdi.bridge.spring.SpringScoped;
 import de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider;
 
 public class SpringCdiExtension implements Extension {
@@ -63,6 +65,11 @@ public class SpringCdiExtension implements Extension {
 
 	private Optional<Bean<?>> createBean(final String beanName, final BeanDefinition beanDefinition,
 			final ConfigurableBeanFactory beanFactory, final BeanManager beanManager) throws ClassNotFoundException {
+
+		if (!isSpringScoped(beanDefinition)) {
+			return Optional.empty();
+		}
+
 		final Optional<Class<?>> beanClass = determineBeanClass(beanDefinition);
 
 		if (!beanClass.isPresent()) {
@@ -91,6 +98,14 @@ public class SpringCdiExtension implements Extension {
 		return Optional.of(new SpringBean(beanName, beanClass.get(), beanTypes, qualifiers, stereotypes, beanFactory));
 	}
 
+	private boolean isSpringScoped(final BeanDefinition beanDefinition) {
+		if (beanDefinition.getSource() instanceof AnnotatedTypeMetadata) {
+			return ((AnnotatedTypeMetadata) beanDefinition.getSource()).isAnnotated(SpringScoped.class.getName());
+		} else {
+			return false;
+		}
+	}
+
 	private Optional<Class<?>> determineBeanClass(final BeanDefinition beanDefinition) {
 		if (beanDefinition instanceof RootBeanDefinition) {
 			final Class<?> targetType = ((RootBeanDefinition) beanDefinition).getTargetType();
@@ -100,8 +115,8 @@ public class SpringCdiExtension implements Extension {
 			}
 		}
 
-		if (beanDefinition.getSource() instanceof StandardMethodMetadata) {
-			final StandardMethodMetadata source = (StandardMethodMetadata) beanDefinition.getSource();
+		if (beanDefinition.getSource() instanceof MethodMetadata) {
+			final MethodMetadata source = (MethodMetadata) beanDefinition.getSource();
 
 			try {
 				return Optional.of(Class.forName(source.getReturnTypeName()));
