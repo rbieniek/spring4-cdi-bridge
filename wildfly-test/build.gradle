@@ -24,7 +24,6 @@ dependencies {
 
    testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container', version: arquillianVersion
    testCompile group: 'org.arquillian.container', name: 'arquillian-container-chameleon', version: arquillianChameleonVersion
-   testCompile group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-depchain', version: shrinkwrapResolverVersion
    testCompile group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-gradle-depchain', version: shrinkwrapResolverVersion
  }
 
