@@ -15,7 +15,7 @@ public class TestJarBuilder {
 		return ShrinkWrap.create(JavaArchive.class).addClass(CdiScope.class)
 				.addClass(DependencyRegisteringBeanFactoryPostProcessor.class).addClass(SpringBean.class)
 				.addClass(SpringCdiExtension.class).addClass(Cdi.class).addClass(SpringScoped.class)
-				.addClass(ApplicationContextProvider.class).addAsManifestResource(
-						"services/de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider");
+				.addClass(ApplicationContextProvider.class)
+				.addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension");
 	}
 }

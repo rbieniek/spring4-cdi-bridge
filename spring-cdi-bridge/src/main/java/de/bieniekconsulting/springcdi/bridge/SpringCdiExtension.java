@@ -23,6 +23,8 @@ import javax.enterprise.inject.spi.ProcessBean;
 import javax.enterprise.util.AnnotationLiteral;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -35,6 +37,8 @@ import de.bieniekconsulting.springcdi.bridge.spring.SpringScoped;
 import de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider;
 
 public class SpringCdiExtension implements Extension {
+	private static final Logger logger = LoggerFactory.getLogger(SpringCdiExtension.class.getName());
+
 	private List<Bean<Object>> cdiBeans = new LinkedList<>();
 
 	public void addBean(@Observes final ProcessBean<Object> bean) {
@@ -58,6 +62,8 @@ public class SpringCdiExtension implements Extension {
 				final BeanDefinition beanDefinition = context.getBeanFactory().getBeanDefinition(beanName);
 
 				if (!CdiScope.class.getName().equals(beanDefinition.getScope())) {
+					logger.info("attempting to add spring bean {} to CDI container", beanName);
+
 					createBean(beanName, beanDefinition, context.getBeanFactory(), manager)
 							.ifPresent(bean -> event.addBean(bean));
 				}
@@ -71,14 +77,20 @@ public class SpringCdiExtension implements Extension {
 			final ConfigurableBeanFactory beanFactory, final BeanManager beanManager) throws ClassNotFoundException {
 
 		if (!isSpringScoped(beanDefinition)) {
+			logger.info("spring bean {} is not spring scoped, skippig", beanName);
+
 			return Optional.empty();
 		}
 
 		final Optional<Class<?>> beanClass = determineBeanClass(beanDefinition);
 
 		if (!beanClass.isPresent()) {
+			logger.info("cannot determine class for spring bean {}, skippig", beanName);
+
 			return Optional.empty();
 		}
+
+		logger.info("determined class {} for spring bean {}", beanClass.get().getName(), beanName);
 
 		final AnnotatedType<?> annotatedType = beanManager.createAnnotatedType(beanClass.get());
 		final Set<Type> beanTypes = annotatedType.getTypeClosure();
