@@ -66,6 +66,7 @@ public class SpringCdiExtension implements Extension {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private Optional<Bean<?>> createBean(final String beanName, final BeanDefinition beanDefinition,
 			final ConfigurableBeanFactory beanFactory, final BeanManager beanManager) throws ClassNotFoundException {
 
