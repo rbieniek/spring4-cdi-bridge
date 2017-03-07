@@ -29,6 +29,7 @@
 
 		<pluginMavenCompilerVersion>3.6.1</pluginMavenCompilerVersion>
 		<pluginMavenWarVersion>3.0.0</pluginMavenWarVersion>
+		<pluginMavenJarVersion>3.0.2</pluginMavenJarVersion>
 		<pluginMavenSurefireVersion>2.19.1</pluginMavenSurefireVersion>
 	</properties>
 
@@ -39,6 +40,11 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${pluginMavenCompilerVersion}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${pluginMavenJarVersion}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
