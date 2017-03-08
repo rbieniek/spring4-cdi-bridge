@@ -1,4 +1,4 @@
-package de.bieniekconsulting.springcdi.wildfly.spring;
+package de.bieniekconsulting.springcdi.wildfly.spring.simple;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -18,6 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.bieniekconsulting.springcdi.bridge.support.TestJarBuilder;
+import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.NameBean;
+import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.SimpleSpringApplicationContextProvider;
+import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.SpringGreeterContext;
 
 @RunWith(Arquillian.class)
 public class SpringGreeterTest {
@@ -27,13 +30,15 @@ public class SpringGreeterTest {
 		final MavenResolverSystem resolver = Maven.resolver();
 
 		return ShrinkWrap.create(WebArchive.class).addClass(SpringGreeter.class)
-				.addClass(SpringApplicationContextProvider.class).addClass(SpringGreeterContext.class)
-				.addClass(NameBean.class)
-				.addAsManifestResource(new StringAsset(SpringApplicationContextProvider.class.getName()),
-						"services/de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider")
+				.addAsLibraries(
+						ShrinkWrap.create(JavaArchive.class).addClass(SimpleSpringApplicationContextProvider.class)
+								.addClass(SpringGreeterContext.class).addClass(NameBean.class).addAsManifestResource(
+										new StringAsset(SimpleSpringApplicationContextProvider.class.getName()),
+										"services/de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider"))
 				.addAsLibraries(TestJarBuilder.extensionJar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addAsLibraries(resolver
-						.resolve("org.springframework:spring-beans:4.3.7.RELEASE",
+						.resolve("org.apache.commons:commons-lang3:3.5",
+								"org.springframework:spring-beans:4.3.7.RELEASE",
 								"org.springframework:spring-core:4.3.7.RELEASE",
 								"org.springframework:spring-context:4.3.7.RELEASE",
 								"org.springframework:spring-context-support:4.3.7.RELEASE")

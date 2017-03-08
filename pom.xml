@@ -19,7 +19,9 @@
 		<weldVersion>2.4.2.SP1</weldVersion>
 		<slf4jVersion>1.7.21</slf4jVersion>
 		<commonsLang3Version>3.5</commonsLang3Version>
+		<liquibaseVersion>3.5.3</liquibaseVersion>
 		<lombokVersion>1.6.10</lombokVersion>
+
 		<junitVersion>4.12</junitVersion>
 		<hamcrestLibraryVersion>1.3</hamcrestLibraryVersion>
 		<assertjVersion>3.5.2</assertjVersion>
@@ -146,6 +148,11 @@
 				</exclusions>
 			</dependency>
 			<dependency>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-core</artifactId>
+				<version>${liquibaseVersion}</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.enterprise</groupId>
 				<artifactId>cdi-api</artifactId>
 				<version>${cdiVersion}</version>
@@ -164,6 +171,11 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${commonsLang3Version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-core</artifactId>
+				<version>${liquibaseVersion}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.assertj</groupId>

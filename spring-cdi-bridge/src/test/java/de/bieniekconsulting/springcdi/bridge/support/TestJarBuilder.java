@@ -1,6 +1,7 @@
 package de.bieniekconsulting.springcdi.bridge.support;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 import de.bieniekconsulting.springcdi.bridge.CdiScope;
@@ -16,6 +17,7 @@ public class TestJarBuilder {
 				.addClass(DependencyRegisteringBeanFactoryPostProcessor.class).addClass(SpringBean.class)
 				.addClass(SpringCdiExtension.class).addClass(Cdi.class).addClass(SpringScoped.class)
 				.addClass(ApplicationContextProvider.class)
-				.addAsManifestResource("META-INF/services/javax.enterprise.inject.spi.Extension");
+				.addAsManifestResource(new StringAsset(SpringCdiExtension.class.getName()),
+						"services/javax.enterprise.inject.spi.Extension");
 	}
 }

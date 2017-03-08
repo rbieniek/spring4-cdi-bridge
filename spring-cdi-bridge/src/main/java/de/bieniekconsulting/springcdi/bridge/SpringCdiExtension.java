@@ -18,6 +18,7 @@ import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeShutdown;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessBean;
 import javax.enterprise.util.AnnotationLiteral;
@@ -39,7 +40,8 @@ import de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider;
 public class SpringCdiExtension implements Extension {
 	private static final Logger logger = LoggerFactory.getLogger(SpringCdiExtension.class.getName());
 
-	private List<Bean<Object>> cdiBeans = new LinkedList<>();
+	private final List<Bean<Object>> cdiBeans = new LinkedList<>();
+	private final List<ConfigurableApplicationContext> contexts = new LinkedList<>();
 
 	public void addBean(@Observes final ProcessBean<Object> bean) {
 		cdiBeans.add(bean.getBean());
@@ -47,6 +49,8 @@ public class SpringCdiExtension implements Extension {
 
 	public void connectCdiAndSpring(@Observes final AfterBeanDiscovery event, final BeanManager manager)
 			throws ClassNotFoundException {
+		logger.info("Initializing Spring CDI bridge");
+
 		final List<ConfigurableApplicationContext> contexts = applicationContextFromServiceLoaders();
 
 		for (final ConfigurableApplicationContext context : contexts) {
@@ -69,6 +73,16 @@ public class SpringCdiExtension implements Extension {
 				}
 			}
 
+		}
+	}
+
+	public void closeSpringContexts(@Observes final BeforeShutdown event) {
+		for (final ConfigurableApplicationContext context : contexts) {
+			try {
+				context.close();
+			} catch (final Exception e) {
+				logger.info("cannot close spring application context", e);
+			}
 		}
 	}
 
@@ -177,7 +191,11 @@ public class SpringCdiExtension implements Extension {
 		final ServiceLoader<ApplicationContextProvider> serviceLoader = ServiceLoader
 				.load(ApplicationContextProvider.class);
 
-		serviceLoader.iterator().forEachRemaining(provider -> contexts.add(provider.provideContext()));
+		serviceLoader.iterator().forEachRemaining(provider -> {
+			logger.info("found application context provider class {}", provider.getClass().getName());
+
+			contexts.add(provider.provideContext());
+		});
 
 		return contexts;
 	}

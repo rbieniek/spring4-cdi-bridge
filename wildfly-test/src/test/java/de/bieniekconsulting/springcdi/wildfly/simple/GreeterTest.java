@@ -18,9 +18,6 @@ public class GreeterTest {
 
 	@Deployment
 	public static WebArchive createDeployment() {
-		// return
-		// ShrinkWrap.create(EmbeddedGradleImporter.class).forThisProjectDirectory().importBuildOutput()
-		// .as(WebArchive.class);
 		return ShrinkWrap.create(WebArchive.class).addClass(Greeter.class).addAsWebInfResource(EmptyAsset.INSTANCE,
 				"beans.xml");
 	}

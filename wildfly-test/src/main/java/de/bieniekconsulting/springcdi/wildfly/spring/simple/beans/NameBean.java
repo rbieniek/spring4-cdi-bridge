@@ -1,4 +1,4 @@
-package de.bieniekconsulting.springcdi.wildfly.spring;
+package de.bieniekconsulting.springcdi.wildfly.spring.simple.beans;
 
 import org.springframework.stereotype.Component;
 
