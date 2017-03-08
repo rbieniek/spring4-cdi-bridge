@@ -24,6 +24,7 @@ import javax.enterprise.inject.spi.ProcessBean;
 import javax.enterprise.util.AnnotationLiteral;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -51,15 +52,20 @@ public class SpringCdiExtension implements Extension {
 			throws ClassNotFoundException {
 		logger.info("Initializing Spring CDI bridge");
 
-		final List<ConfigurableApplicationContext> contexts = applicationContextFromServiceLoaders();
+		final List<Pair<ConfigurableApplicationContext, Boolean>> contextPairs = applicationContextFromServiceLoaders();
 
-		for (final ConfigurableApplicationContext context : contexts) {
+		for (final Pair<ConfigurableApplicationContext, Boolean> contextPair : contextPairs) {
+			final ConfigurableApplicationContext context = contextPair.getLeft();
 
 			if (!context.isActive()) {
 				context.addBeanFactoryPostProcessor(
 						new DependencyRegisteringBeanFactoryPostProcessor(manager, cdiBeans));
 
 				context.refresh();
+			}
+
+			if (contextPair.getRight()) {
+				this.contexts.add(context);
 			}
 
 			for (final String beanName : context.getBeanDefinitionNames()) {
@@ -185,8 +191,8 @@ public class SpringCdiExtension implements Extension {
 	 *
 	 * @return
 	 */
-	private List<ConfigurableApplicationContext> applicationContextFromServiceLoaders() {
-		final List<ConfigurableApplicationContext> contexts = new LinkedList<>();
+	private List<Pair<ConfigurableApplicationContext, Boolean>> applicationContextFromServiceLoaders() {
+		final List<Pair<ConfigurableApplicationContext, Boolean>> contexts = new LinkedList<>();
 
 		final ServiceLoader<ApplicationContextProvider> serviceLoader = ServiceLoader
 				.load(ApplicationContextProvider.class);
@@ -194,7 +200,7 @@ public class SpringCdiExtension implements Extension {
 		serviceLoader.iterator().forEachRemaining(provider -> {
 			logger.info("found application context provider class {}", provider.getClass().getName());
 
-			contexts.add(provider.provideContext());
+			contexts.add(Pair.of(provider.provideContext(), provider.closeOnShutdown()));
 		});
 
 		return contexts;

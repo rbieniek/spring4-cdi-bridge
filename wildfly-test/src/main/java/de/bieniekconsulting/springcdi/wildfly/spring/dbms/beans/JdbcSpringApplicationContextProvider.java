@@ -12,4 +12,9 @@ public class JdbcSpringApplicationContextProvider implements ApplicationContextP
 		return new AnnotationConfigApplicationContext(JdbcContext.class);
 	}
 
+	@Override
+	public boolean closeOnShutdown() {
+		return true;
+	}
+
 }
