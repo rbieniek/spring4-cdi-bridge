@@ -17,7 +17,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.bieniekconsulting.springcdi.bridge.support.TestJarBuilder;
+import de.bieniekconsulting.springcdi.bridge.test.TestJarBuilder;
 import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.NameBean;
 import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.SimpleSpringApplicationContextProvider;
 import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.SpringGreeterContext;
