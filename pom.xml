@@ -9,6 +9,7 @@
 
 	<modules>
 		<module>spring-cdi-bridge</module>
+		<module>spring-cdi-bridge-test</module>
 		<module>wildfly-test</module>
 	</modules>
 

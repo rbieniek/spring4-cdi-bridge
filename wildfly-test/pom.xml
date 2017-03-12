@@ -30,9 +30,8 @@
 			</dependency>
 		<dependency>
 			<groupId>de.bieniek-consulting</groupId>
-			<artifactId>spring-cdi-bridge</artifactId>
+			<artifactId>spring-cdi-bridge-test</artifactId>
 			<version>1.0</version>
-			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
