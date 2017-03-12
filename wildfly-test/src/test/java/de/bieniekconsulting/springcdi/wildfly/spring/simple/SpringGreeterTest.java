@@ -12,12 +12,11 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.bieniekconsulting.springcdi.bridge.test.TestJarBuilder;
+import de.bieniekconsulting.springcdi.bridge.test.SpringCdiDependenciesProvider;
+import de.bieniekconsulting.springcdi.bridge.test.SpringCdiTestJarBuilder;
 import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.NameBean;
 import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.SimpleSpringApplicationContextProvider;
 import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.SpringGreeterContext;
@@ -27,22 +26,14 @@ public class SpringGreeterTest {
 
 	@Deployment
 	public static WebArchive createDeployment() {
-		final MavenResolverSystem resolver = Maven.resolver();
-
 		return ShrinkWrap.create(WebArchive.class).addClass(SpringGreeter.class)
 				.addAsLibraries(
 						ShrinkWrap.create(JavaArchive.class).addClass(SimpleSpringApplicationContextProvider.class)
 								.addClass(SpringGreeterContext.class).addClass(NameBean.class).addAsManifestResource(
 										new StringAsset(SimpleSpringApplicationContextProvider.class.getName()),
 										"services/de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider"))
-				.addAsLibraries(TestJarBuilder.extensionJar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-				.addAsLibraries(resolver
-						.resolve("org.apache.commons:commons-lang3:3.5",
-								"org.springframework:spring-beans:4.3.7.RELEASE",
-								"org.springframework:spring-core:4.3.7.RELEASE",
-								"org.springframework:spring-context:4.3.7.RELEASE",
-								"org.springframework:spring-context-support:4.3.7.RELEASE")
-						.withTransitivity().as(JavaArchive.class));
+				.addAsLibraries(SpringCdiTestJarBuilder.extensionJar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+				.addAsLibraries(SpringCdiDependenciesProvider.dependencies());
 	}
 
 	@Inject

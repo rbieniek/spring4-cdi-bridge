@@ -20,7 +20,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.bieniekconsulting.springcdi.bridge.test.TestJarBuilder;
+import de.bieniekconsulting.springcdi.bridge.test.SpringCdiDependenciesProvider;
+import de.bieniekconsulting.springcdi.bridge.test.SpringCdiTestJarBuilder;
 import de.bieniekconsulting.springcdi.wildfly.spring.dbms.beans.DatabaseService;
 import de.bieniekconsulting.springcdi.wildfly.spring.dbms.beans.JdbcContext;
 import de.bieniekconsulting.springcdi.wildfly.spring.dbms.beans.JdbcSpringApplicationContextProvider;
@@ -39,15 +40,11 @@ public class SpringJdbcTest {
 						.addAsManifestResource(new StringAsset(JdbcSpringApplicationContextProvider.class.getName()),
 								"services/de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider")
 						.addAsResource("db-changelog.xml"))
-				.addAsLibraries(TestJarBuilder.extensionJar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+				.addAsLibraries(SpringCdiTestJarBuilder.extensionJar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addAsWebInfResource("jboss-ds.xml")
+				.addAsLibraries(SpringCdiDependenciesProvider.dependencies())
 				.addAsLibraries(resolver
-						.resolve("org.apache.commons:commons-lang3:3.5",
-								"org.springframework:spring-beans:4.3.7.RELEASE",
-								"org.springframework:spring-core:4.3.7.RELEASE",
-								"org.springframework:spring-context:4.3.7.RELEASE",
-								"org.springframework:spring-context-support:4.3.7.RELEASE",
-								"org.springframework:spring-jdbc:4.3.7.RELEASE",
+						.resolve("org.springframework:spring-jdbc:4.3.7.RELEASE",
 								"org.springframework:spring-tx:4.3.7.RELEASE", "org.liquibase:liquibase-core:3.5.3")
 						.withTransitivity().as(JavaArchive.class));
 	}
