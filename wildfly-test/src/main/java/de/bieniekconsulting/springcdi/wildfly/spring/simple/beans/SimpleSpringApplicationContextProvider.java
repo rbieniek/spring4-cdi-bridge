@@ -3,7 +3,7 @@ package de.bieniekconsulting.springcdi.wildfly.spring.simple.beans;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider;
+import de.bieniekconsulting.springcdi.bridge.api.ApplicationContextProvider;
 
 public class SimpleSpringApplicationContextProvider implements ApplicationContextProvider {
 

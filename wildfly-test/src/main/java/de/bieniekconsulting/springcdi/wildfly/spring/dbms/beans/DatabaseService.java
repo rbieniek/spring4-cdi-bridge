@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.bieniekconsulting.springcdi.bridge.spring.SpringScoped;
+import de.bieniekconsulting.springcdi.bridge.api.SpringScoped;
 
 @Component
 @SpringScoped

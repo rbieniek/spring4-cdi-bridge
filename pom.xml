@@ -8,6 +8,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>spring-cdi-bridge-api</module>
+		<module>spring-cdi-bridge-api-test</module>
 		<module>spring-cdi-bridge</module>
 		<module>spring-cdi-bridge-test</module>
 		<module>wildfly-test</module>

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import de.bieniekconsulting.springcdi.bridge.spring.SpringScoped;
+import de.bieniekconsulting.springcdi.bridge.api.SpringScoped;
 import de.bieniekconsulting.springcdi.bridge.support.SharedStaticApplicationContextProvider;
 import de.bieniekconsulting.springcdi.bridge.support.WeldBootstrapRule;
 

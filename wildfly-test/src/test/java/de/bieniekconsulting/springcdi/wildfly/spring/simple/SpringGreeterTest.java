@@ -15,6 +15,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.bieniekconsulting.springcdi.bridge.api.test.SpringCdiApiTestJarBuilder;
 import de.bieniekconsulting.springcdi.bridge.test.SpringCdiDependenciesProvider;
 import de.bieniekconsulting.springcdi.bridge.test.SpringCdiTestJarBuilder;
 import de.bieniekconsulting.springcdi.wildfly.spring.simple.beans.NameBean;
@@ -31,8 +32,8 @@ public class SpringGreeterTest {
 						ShrinkWrap.create(JavaArchive.class).addClass(SimpleSpringApplicationContextProvider.class)
 								.addClass(SpringGreeterContext.class).addClass(NameBean.class).addAsManifestResource(
 										new StringAsset(SimpleSpringApplicationContextProvider.class.getName()),
-										"services/de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider"))
-				.addAsLibraries(SpringCdiTestJarBuilder.extensionJar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+										"services/de.bieniekconsulting.springcdi.bridge.api.ApplicationContextProvider"))
+				.addAsLibraries(SpringCdiTestJarBuilder.extensionJar(), SpringCdiApiTestJarBuilder.jar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addAsLibraries(SpringCdiDependenciesProvider.dependencies());
 	}
 

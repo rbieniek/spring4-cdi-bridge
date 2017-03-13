@@ -35,8 +35,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.core.type.MethodMetadata;
 
-import de.bieniekconsulting.springcdi.bridge.spring.SpringScoped;
-import de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider;
+import de.bieniekconsulting.springcdi.bridge.api.ApplicationContextProvider;
+import de.bieniekconsulting.springcdi.bridge.api.SpringScoped;
 
 public class SpringCdiExtension implements Extension {
 	private static final Logger logger = LoggerFactory.getLogger(SpringCdiExtension.class.getName());

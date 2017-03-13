@@ -20,6 +20,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.bieniekconsulting.springcdi.bridge.api.test.SpringCdiApiTestJarBuilder;
 import de.bieniekconsulting.springcdi.bridge.test.SpringCdiDependenciesProvider;
 import de.bieniekconsulting.springcdi.bridge.test.SpringCdiTestJarBuilder;
 import de.bieniekconsulting.springcdi.wildfly.spring.dbms.beans.DatabaseService;
@@ -38,9 +39,9 @@ public class SpringJdbcTest {
 						.addClass(JdbcSpringApplicationContextProvider.class).addClass(JdbcContext.class)
 						.addClass(DatabaseService.class)
 						.addAsManifestResource(new StringAsset(JdbcSpringApplicationContextProvider.class.getName()),
-								"services/de.bieniekconsulting.springcdi.bridge.support.ApplicationContextProvider")
+								"services/de.bieniekconsulting.springcdi.bridge.api.ApplicationContextProvider")
 						.addAsResource("db-changelog.xml"))
-				.addAsLibraries(SpringCdiTestJarBuilder.extensionJar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+				.addAsLibraries(SpringCdiTestJarBuilder.extensionJar(), SpringCdiApiTestJarBuilder.jar()).addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addAsWebInfResource("jboss-ds.xml")
 				.addAsLibraries(SpringCdiDependenciesProvider.dependencies())
 				.addAsLibraries(resolver

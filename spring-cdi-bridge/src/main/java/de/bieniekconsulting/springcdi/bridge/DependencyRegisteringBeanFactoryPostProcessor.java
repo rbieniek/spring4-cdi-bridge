@@ -15,7 +15,7 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
-import de.bieniekconsulting.springcdi.bridge.spring.Cdi;
+import de.bieniekconsulting.springcdi.bridge.api.Cdi;
 
 public class DependencyRegisteringBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
