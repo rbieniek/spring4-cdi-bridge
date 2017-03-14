@@ -83,9 +83,11 @@ public class SpringCdiExtension implements Extension {
 	}
 
 	public void closeSpringContexts(@Observes final BeforeShutdown event) {
+		logger.info("stopping application contexts");
+
 		for (final ConfigurableApplicationContext context : contexts) {
 			try {
-				context.close();
+				context.stop();
 			} catch (final Exception e) {
 				logger.info("cannot close spring application context", e);
 			}
